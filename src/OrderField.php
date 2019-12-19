@@ -46,20 +46,22 @@ class OrderField extends Field
         $this->withMeta(
             $this->getResourcePosition($resource, $resourceClass)
         );
+        
+        // This code causes an error when a resource using this field is used by another resource
+        // E.g. in a BelogsTo field
+//         if($pivot = $this->shouldResolveOnPivot($request, $resourceClass)) {
+//             $attribute = $resourceClass::modelOrderByFieldAttribute($pivot);
 
-        if($pivot = $this->shouldResolveOnPivot($request, $resourceClass)) {
-            $attribute = $resourceClass::modelOrderByFieldAttribute($pivot);
+//             $this->withMeta([
+//                 'viaResource' => $request->viaResource,
+//                 'viaResourceId' => $request->viaResourceId,
+//                 'viaRelationship' => $request->viaRelationship,
+//             ]);
 
-            $this->withMeta([
-                'viaResource' => $request->viaResource,
-                'viaResourceId' => $request->viaResourceId,
-                'viaRelationship' => $request->viaRelationship,
-            ]);
+//             return data_get($pivot, $attribute);
+//         }
 
-            return data_get($pivot, $attribute);
-        }
-
-        $attribute = $resourceClass::modelOrderByFieldAttribute($resource);
+//         $attribute = $resourceClass::modelOrderByFieldAttribute($resource);
 
         return data_get($resource, $attribute);
     }
